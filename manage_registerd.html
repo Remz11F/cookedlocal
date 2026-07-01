@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Registered Cooks</title>
+  <style>
+    /* All css code follows same structure as all css within seller_reg.html */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #fff9f4, #ffe4d1);
+      color: #000;
+    }
+
+    header {
+      background-color: #fffdf9;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .logo img {
+      width: 150px;
+      height: auto;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #333;
+      margin-left: 20px;
+      font-size: 1em;
+    }
+
+    .dashboard {
+      display: flex;
+      min-height: calc(100vh - 100px);
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #fedab8;
+      padding: 30px 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    }
+
+    .sidebar h3 {
+      font-size: 1.3em;
+      margin-bottom: 25px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      margin-bottom: 20px;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      padding: 12px 20px;
+      display: block;
+      background: #fff;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .sidebar a:hover {
+      background-color: #fe964f;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .content {
+      flex: 1;
+      padding: 50px;
+      background-color: #fff;
+    }
+
+    .cook-card {
+      background-color: #fffdf9;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    .cook-info h3 {
+      margin: 0 0 5px;
+      font-size: 18px;
+    }
+
+    .cook-info p {
+      margin: 2px 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .certificate img, .certificate a {
+      display: inline-block;
+      margin-top: 10px;
+      max-width: 200px;
+    }
+
+    .action-buttons button {
+      padding: 8px 14px;
+      margin-right: 8px;
+      font-size: 13px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    .approve-btn { 
+      background-color: #f4a261;
+     }
+
+    .suspend-btn { 
+      background-color: #e76f51; 
+    }
+  </style>
+</head>
+<body>
+  <!-- Creates Header with logo and home  -->
+  <header>
+    <div class="logo">
+      <img src="Logo.png" alt="CookedLocal Logo" />
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+    </nav>
+  </header>
+  <!-- Option select from all user management function -->
+  <div class="dashboard">
+    <div class="sidebar">
+      <h3>Admin Menu</h3>
+      <ul>
+        <li><a href="admin.html">Dashboard</a></li>
+      </ul>
+    </div>
+
+    <div class="content">
+      <h2>Manage Cooks</h2>
+      <div id="cook-list">Loading</div>
+    </div>
+  </div>
+
+  <script>
+    function handleAction(id, action) {
+      // Sends the requests to server
+      fetch('seller_action.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, action })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          location.reload();
+        } else {
+          alert('Action failed.');
+        }
+      });
+    }
+
+    fetch('get_sellers.php')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('cook-list');
+        container.innerHTML = '';
+        data.forEach(cook => {
+          container.innerHTML += `
+            <div class="cook-card">
+              <div class="cook-info">
+                <h3>${cook.forname} ${cook.surname}</h3>
+                <p><strong>Email:</strong> ${cook.email}</p>
+                <p><strong>Status:</strong> ${cook.status || 'Pending'}</p>
+                <div class="certificate">
+                  <strong>Certificate:</strong><br>
+                  ${cook.certificate_image.endsWith('.pdf') ?
+                    `<a href="${cook.certificate_image}" target="_blank">View Certificate</a>` :
+                    `<img src="${cook.certificate_image}" alt="Certificate">`}
+                </div>
+              </div>
+              <div class="action-buttons">
+                <button class="approve-btn" onclick="handleAction(${cook.id}, 'approve')">Approve</button>
+                <button class="suspend-btn" onclick="handleAction(${cook.id}, 'suspend')">Suspend</button>
+              </div>
+            </div>
+          `;
+        });
+      })
+      .catch(err => {
+        console.error('Error loading sellers:', err);
+        document.getElementById('cook-list').innerHTML = '<p>Failed to load sellers.</p>';
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Update Buyer Profile</title>
+  <style>
+    /* Body of website */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fff9f4;
+    }
+    /* Header of Website (how it will be) */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background-color: #fffdf9;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    /* Format of Logo */
+    .logo img {
+      width: 150px;
+      height: auto;
+    }
+    /* Navigate links*/
+    nav a {
+      text-decoration: none;
+      color: #333;
+      margin-left: 20px;
+      font-size: 1em;
+    }
+    /* The Main Content */
+    main {
+      padding: 50px 20px;
+      background-color: #fedab8;
+      display: flex;
+      justify-content: center;
+    }
+    /* Form Content */
+    .form-container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+    /* Heading inside the the form container */
+    .form-container h2 {
+      margin-bottom: 20px;
+    }
+    /* Input */
+    .input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    /* Lable on input */
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .input-group input,
+    .input-group textarea,
+    .input-group select {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    /* Specify text area*/
+    .input-group textarea {
+      height: 100px;
+      resize: vertical;
+    }
+    /* Profile picture circle*/
+    .profile-image {
+      display: block;
+      margin: 0 auto 10px;
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px #000;
+    }
+    /* Image input button*/
+    .input-group button {
+      width: 100%;
+      padding: 10px;
+      background-color: #fe964f;
+      color: white;
+      border: none;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .input-group button:hover {
+      background-color: #f35920;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <!-- Header with logo -->
+  <div class="logo">
+    <img src="Logo.png" alt="CookedLocal Logo" />
+  </div>
+  <nav>
+    <!-- Back to index page -->
+    <a href="index.html">Home</a>
+  </nav>
+</header>
+
+<main>
+  <div class="form-container">
+    <h2>Update Buyer Details</h2>
+    <form id="buyerUpdateForm" enctype="multipart/form-data">
+      <!-- Profile pic input -->
+      <div class="input-group">
+        <img id="profileImage" class="profile-image" src="default-profile.png" alt="Profile Picture">
+        <label>Profile Picture</label>
+        <input type="file" name="profile" onchange="document.getElementById('profileImage').src = window.URL.createObjectURL(this.files[0])">
+      </div>
+
+      <!-- First Name input -->
+      <div class="input-group">
+        <label>First Name</label>
+        <input type="text" name="forname" required>
+      </div>
+      <!-- Surname input -->
+      <div class="input-group">
+        <label>Surname</label>
+        <input type="text" name="surname" required>
+      </div>
+      <!-- Email input -->
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" name="email" required>
+      </div>
+      <!-- phonenumber input -->
+      <div class="input-group">
+        <label>Phone Number</label>
+        <input type="text" name="phone_number" required>
+      </div>
+      <!-- Bio input -->
+      <div class="input-group">
+        <label>Bio</label>
+        <textarea name="bio" required></textarea>
+      </div>
+      <!-- Food prederence input -->
+      <div class="input-group">
+        <label>Food Preference</label>
+        <textarea name="food_preference" required></textarea>
+      </div>
+      <!-- Hobbies input -->
+      <div class="input-group">
+        <label>Hobbies/Interests</label>
+        <textarea name="hobbies_interests" required></textarea>
+      </div>
+      <!-- Address input -->
+      <div class="input-group">
+        <label>Address</label>
+        <input type="text" name="address" required>
+      </div>
+      <!-- City input -->
+      <div class="input-group">
+        <label>City</label>
+        <input type="text" name="city" required>
+      </div>
+      <!-- Postcode input -->
+      <div class="input-group">
+        <label>Postcode</label>
+        <input type="text" name="postcode" required>
+      </div>
+      <!-- Billing input -->
+      <div class="input-group">
+        <label>Billing Address</label>
+        <textarea name="billing_address" required></textarea>
+      </div>
+      <!-- Payment input -->
+      <div class="input-group">
+        <label>Payment Methods</label>
+        <label><input type="checkbox" name="payment_methods[]" value="paypal"> PayPal</label><br>
+        <label><input type="checkbox" name="payment_methods[]" value="credit-card"> Credit Card</label><br>
+        <label><input type="checkbox" name="payment_methods[]" value="cash"> Cash</label>
+      </div>
+      <!-- Submit button to update details -->
+      <div class="input-group">
+        <button type="submit">Update Profile</button>
+      </div>
+
+    </form>
+  </div>
+</main>
+
+<script>
+  // Fetches the buyers data and enters it within the form
+  fetch('buyer_update.php')
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) return alert(data.error);
+      // fetches all data from buyer table
+      const form = document.forms['buyerUpdateForm'];
+      form.forname.value = data.forname;
+      form.surname.value = data.surname;
+      form.email.value = data.email;
+      form.phone_number.value = data.phone;
+      form.bio.value = data.bio;
+      form.food_preference.value = data.food_preference;
+      form.hobbies_interests.value = data.hobbies_interests;
+      form.address.value = data.address;
+      form.city.value = data.city;
+      form.postcode.value = data.postcode;
+      form.billing_address.value = data.billing_address;
+      document.getElementById("profileImage").src = data.profile_image || "default-profile.png";
+
+      (data.payment_methods || "").split(",").map(p => p.trim()).forEach(method => {
+        const checkbox = form.querySelector(`input[value="${method}"]`);
+        if (checkbox) checkbox.checked = true;
+      });
+    });
+
+  document.getElementById('buyerUpdateForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    // Uploads the data to the server 
+    fetch('buyer_update.php', {
+      method: 'POST',
+      body: formData
+    }).then(res => res.text())
+      .then(response => {
+        if (response === 'OK') {
+          alert("Profile Updated");
+          // Sends back to buyers dashboard
+          window.location.href = "buyer_dashboard.html";
+          // Error message if fails
+        } else {
+          alert("Update failed due to errors: " + response);
+        }
+      });
+  });
+</script>
+</body>
+</html>

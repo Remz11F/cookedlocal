@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seller Dashboard</title>
+  <style>
+    /* All css code follows same structure as all css within seller_reg.html */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #fff9f4, #ffe4d1);
+      color: #000;
+    }
+    header {
+      background-color: #fffdf9;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    .logo img { width: 150px; height: auto; }
+    nav a {
+      text-decoration: none;
+      color: #333;
+      margin-left: 20px;
+      font-size: 1em;
+    }
+    .dashboard {
+      display: flex;
+      min-height: calc(100vh - 100px);
+    }
+    .sidebar {
+      width: 250px;
+      background-color: #fedab8;
+      padding: 30px 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    }
+    .sidebar h3 { font-size: 1.3em; margin-bottom: 25px; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin-bottom: 20px; }
+    .sidebar a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      padding: 12px 20px;
+      display: block;
+      background: #fff;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .sidebar a:hover {
+      background-color: #fe964f;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .content {
+      flex: 1;
+      padding: 50px;
+      background-color: #fff;
+    }
+    .content h2 { margin-bottom: 30px; color: #f35920; }
+    .info-box {
+      background-color: #fffdf9;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      max-width: 700px;
+    }
+    .info-box p {
+      margin: 15px 0;
+      font-size: 1.05em;
+    }
+    .info-box p strong { 
+      color: #333;
+     }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <img src="Logo.png" alt="CookedLocal Logo" />
+  </div>
+  <nav>
+    <a href="index.html">Home</a>
+  </nav>
+</header>
+
+<div class="dashboard">
+  <div class="sidebar">
+    <h3>Seller Menu</h3>
+    <ul>
+      <!-- Seller functions -->
+      <li><a href="seller_update.html">Update Profile</a></li>
+      <li><a href="manage_dishes.html">Manage Dishes</a></li>
+      <li><a href="login.html" onclick="logout(event)">Logout</a></li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <h2 id="welcome-heading">Welcome</h2>
+    <div class="info-box" id="info-box">Loading</div>
+  </div>
+</div>
+
+<script>
+  // Loads seller data
+  fetch('get_seller_info.php')
+    .then(res => res.json())
+    .then(seller => {
+      if (seller.error) {
+        document.getElementById("info-box").innerHTML = `<p>${seller.error}</p>`;
+        return;
+      }
+
+      // Creates widget containing seller information from seller table
+      document.getElementById("welcome-heading").textContent = `Welcome, ${seller.forname} ${seller.surname}`;
+      document.getElementById("info-box").innerHTML = `
+        <img src="${seller.profile_image || 'default-profile.png'}" alt="Profile Picture"
+             style="width:150px;height:150px;border-radius:50%;object-fit:cover;margin-bottom:20px;">
+        <p><strong>Email:</strong> ${seller.email}</p>
+        <p><strong>Phone:</strong> ${seller.phone}</p>
+        <p><strong>Bio:</strong> ${seller.bio}</p>
+        <p><strong>Cuisine:</strong> ${seller.cuisine}</p>
+        <p><strong>City:</strong> ${seller.city}</p>
+        <p><strong>Payment Methods:</strong> ${seller.payment_methods}</p>
+        <p><strong>Certificate:</strong> Level 2 Food Hygiene Uploaded</p>
+      `;
+    })
+    // Error handeling
+    .catch(err => {
+      console.error(err);
+      document.getElementById("info-box").innerHTML = "<p>Error loading data.</p>";
+    });
+
+  function logout(e) {
+    e.preventDefault();
+    sessionStorage.clear(); 
+    window.location.href = "login.html";
+  }
+</script>
+
+</body>
+</html>

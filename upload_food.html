@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload Dish</title>
+  <style>
+    /* All css code follows same structure as all css within seller_reg.html */
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom, #fff9f4, #ffe4d1);
+      color: #333;
+    }
+
+    header {
+      background-color: #fffdf9;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .logo img {
+      width: 150px;
+      height: auto;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #333;
+      margin-left: 20px;
+      font-size: 1em;
+      font-weight: bold;
+    }
+
+    main {
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .form-container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .form-container h2 {
+      text-align: center;
+      color: #f35920;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .days-checklist {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .days-checklist label {
+      font-size: 14px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #fe964f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #f35920;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><img src="Logo.png" alt="CookedLocal Logo"></div>
+    <nav><a href="index.html">Home</a></nav>
+  </header>
+  <!-- Dish entries -->
+  <main>
+    <div class="form-container">
+      <h2>Upload Dish</h2>
+      <form action="upload_dish.php" method="POST" enctype="multipart/form-data" id="uploadForm">
+        <div class="form-group">
+          <!-- Enter Dish name -->
+          <label>Dish Name</label>
+          <input type="text" name="name" required />
+        </div>
+        <!-- Price Input -->
+        <div class="form-group">
+          <label>Price</label>
+          <input type="text" name="price" step="0.01" required />
+        </div>
+        <!-- List total portions input -->
+        <div class="form-group">
+          <label>Available Portions</label>
+          <input type="number" name="portions" required />
+        </div>
+        <!-- Allergy input -->
+        <div class="form-group">
+          <label>Allergy Info</label>
+          <input type="text" name="allergy" />
+        </div>
+        <!-- Dish description entries -->
+        <div class="form-group">
+          <label>Description</label>
+          <textarea name="description" required></textarea>
+        </div>
+        <!-- Select day to set dish on -->
+        <div class="form-group">
+          <label>Days Available</label>
+          <div class="days-checklist">
+            <label><input type="checkbox" name="days[]" value="Monday" /> Monday</label>
+            <label><input type="checkbox" name="days[]" value="Tuesday" /> Tuesday</label>
+            <label><input type="checkbox" name="days[]" value="Wednesday" /> Wednesday</label>
+            <label><input type="checkbox" name="days[]" value="Thursday" /> Thursday</label>
+            <label><input type="checkbox" name="days[]" value="Friday" /> Friday</label>
+            <label><input type="checkbox" name="days[]" value="Saturday" /> Saturday</label>
+            <label><input type="checkbox" name="days[]" value="Sunday" /> Sunday</label>
+          </div>
+        </div>
+        <!-- Time start entry -->
+        <div class="form-group">
+          <label>Start Time (24hr HH:MM)</label>
+          <input type="time" name="time_start" required />
+        </div>
+        <!-- End time entry -->
+        <div class="form-group">
+          <label>End Time (24hr HH:MM)</label>
+          <input type="time" name="time_end" required />
+        </div>
+        <!-- Image entry -->
+        <div class="form-group">
+          <label>Upload Image</label>
+          <input type="file" name="image" accept="image/*" required />
+        </div>
+        <button class="submit-btn" type="submit">Add Dish</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

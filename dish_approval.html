@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Dishes</title>
+  <style>
+    /* Body of website */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #fff9f4, #ffe4d1);
+      color: #000;
+    }
+    /* Header of Website (how it will be) */
+    header {
+      background-color: #fffdf9;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    /* Logo image format */
+    .logo img {
+      width: 150px;
+      height: auto;
+    }
+    /* Navigate links */
+    nav a {
+      text-decoration: none;
+      color: #333;
+      margin-left: 20px;
+      font-size: 1em;
+    }
+    /* Dashboard layout */
+    .dashboard {
+      display: flex;
+      min-height: calc(110vh - 120px);
+    }
+    /* Sidebar Style */
+    .sidebar {
+      width: 250px;
+      background-color: #fedab8;
+      padding: 30px 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    }
+    /* Heading style of side bar */
+    .sidebar h3 {
+      font-size: 1.3em;
+      margin-bottom: 25px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      margin-bottom: 20px;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      padding: 12px 20px;
+      display: block;
+      background: #fff;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    /* The hover effect of sidebar */
+    .sidebar a:hover {
+      background-color: #fe964f;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    /* Content area styling */
+    .content {
+      flex: 1;
+      padding: 50px;
+      background-color: #fff;
+    }
+    /* Dish card styling */
+    .dish-card {
+      background-color: #fffdf9;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    /* Dishes info heading */
+    .dish-info h3 {
+      margin: 0 0 5px;
+      font-size: 18px;
+    }
+
+    .dish-info p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .dish-image {
+      width: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    /* button */
+    .buttons {
+      margin-top: 15px;
+    }
+
+    .buttons button {
+      padding: 8px 14px;
+      margin-right: 8px;
+      font-size: 13px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #fff;
+    }
+    /* Approval Button */
+    .approve-btn { 
+      background-color: #f4a261; 
+    }
+    /* Suspend Button */
+    .suspend-btn { 
+      background-color: #e76f51; 
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Header with logo -->
+    <div class="logo">
+      <img src="Logo.png" alt="CookedLocal Logo" />
+    </div>
+    <nav>
+      <!-- Back to index page -->
+      <a href="index.html">Home</a>
+    </nav>
+  </header>
+
+  <div class="dashboard">
+    <div class="sidebar">
+      <h3>Admin Menu</h3>
+      <ul>
+        <li><a href="admin.html">Dashboard</a></li>
+      </ul>
+    </div>
+
+    <div class="content">
+      <h2>Manage Dishes</h2>
+      <div id="dish-list">Loading</div>
+    </div>
+  </div>
+
+  <script>
+    // Handles the dish approval or deletion
+    function handleDishAction(id, action) {
+      // Sends request to server
+      fetch('dish_approval.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, action })
+      })
+      .then(res => res.json())
+      .then(data => {
+        // Validates the action was successful
+        if (data.success) {
+          location.reload();
+        } else {
+          alert('Error: Action Failed ' + data.error);
+        }
+      });
+    }
+    // Gets dishes from server
+    fetch('get_dishes.php')
+      .then(res => res.json())
+      .then(data => {
+        // Container to display the dishes to user
+        const container = document.getElementById('dish-list');
+        // Clears the message
+        container.innerHTML = '';
+        // Loop each dish this puts them into a widget
+        data.forEach(dish => {
+          // This Widget contains information of the dish widget also contains the suspend and approve button
+          container.innerHTML += `
+            <div class="dish-card">
+              <img src="${dish.image_path}" class="dish-image" alt="Dish Image">
+              <div class="dish-info">
+                <h3>${dish.dish_name}</h3>
+                <p><strong>Price:</strong> £${parseFloat(dish.price).toFixed(2)} – ${dish.portions} portions</p>
+                <p><strong>Allergy Info:</strong> ${dish.allergy_info}</p>
+                <p><strong>Description:</strong> ${dish.description}</p>
+                <p><strong>Available:</strong> ${dish.available_days}, ${dish.time_start} – ${dish.time_end}</p>
+              </div>
+              <div class="buttons">
+                <button class="approve-btn" onclick="handleDishAction(${dish.id}, 'approve')">Approve</button>
+                <button class="suspend-btn" onclick="handleDishAction(${dish.id}, 'suspend')">Suspend</button>
+              </div>
+            </div>
+          `;
+        });
+      })
+      // Error handeling of dishes not loaded
+      .catch(err => {
+        console.error('Error loading dishes:', err);
+      });
+  </script>
+</body>
+</html>

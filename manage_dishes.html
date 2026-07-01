@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Dishes</title>
+  <style>
+    /* All css code follows same structure as all css within seller_reg.html */
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      background-color: #fedab8;
+      width: 220px;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar h2 {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .sidebar button {
+      background: white;
+      border: none;
+      padding: 12px 16px;
+      margin-bottom: 15px;
+      width: 100%;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .sidebar button:hover {
+      background-color: #f4c59c;
+    }
+
+    .main {
+      flex: 1;
+      background-color: #fdf8f3;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #fffdf9;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo img {
+      width: 140px;
+    }
+
+    .days {
+      padding: 30px 40px;
+      overflow-y: auto;
+      height: 100%;
+    }
+
+    .day-column {
+      background-color: #f7f2ee;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .day-column h3 {
+      color: #f35920;
+      margin-bottom: 10px;
+    }
+
+    .dish-card {
+      background: #fff6f2;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .dish-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .dish-name {
+      font-weight: bold;
+      color: #f35920;
+      margin: 8px 0 4px;
+    }
+
+    .dish-details {
+      font-size: 14px;
+    }
+
+    .btn-unavailable {
+      margin-top: 10px;
+      width: 100%;
+      background-color: #f35920;
+      color: white;
+      border: none;
+      padding: 8px;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn-unavailable:hover {
+      background-color: #cc4626;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Manage Dishes</h2>
+    <!-- Button to add dishes and logot of account -->
+    <button onclick="location.href='upload_food.html'">Add Dish</button>
+    <button onclick="location.href='login.html'">Logout</button>
+    <button onclick="location.href='seller_dashboard.html'">Back to Dashboard</button>
+
+  </div>
+
+  <div class="main">
+    <header>
+      <div class="logo">
+        <img src="Logo.png" alt="CookedLocal Logo">
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+      </nav>
+    </header>
+
+    <div class="days" id="days">
+      <!-- Container of all week days -->
+      <div id="monday" class="day-column"><h3>Monday</h3></div>
+      <div id="tuesday" class="day-column"><h3>Tuesday</h3></div>
+      <div id="wednesday" class="day-column"><h3>Wednesday</h3></div>
+      <div id="thursday" class="day-column"><h3>Thursday</h3></div>
+      <div id="friday" class="day-column"><h3>Friday</h3></div>
+      <div id="saturday" class="day-column"><h3>Saturday</h3></div>
+      <div id="sunday" class="day-column"><h3>Sunday</h3></div>
+    </div>
+  </div>
+
+  <script>
+    async function loadDishes() {
+      const res = await fetch('get_seller_dishes.php');
+      const dishes = await res.json();
+      // Maps days to their HTML element ID
+      const daysMap = {
+        Monday: "monday",
+        Tuesday: "tuesday",
+        Wednesday: "wednesday",
+        Thursday: "thursday",
+        Friday: "friday",
+        Saturday: "saturday",
+        Sunday: "sunday",
+      };
+      // Loops through all dishes and displays them within the day calander
+      dishes.forEach(dish => {
+        dish.days.forEach(day => {
+          // Gets current column element for current days
+          const col = document.getElementById(daysMap[day]);
+          const card = document.createElement('div');
+          card.className = 'dish-card';
+          // Card with dish info
+          card.innerHTML = `
+            <img src="${dish.image_path}" alt="${dish.dish_name}">
+            <div class="dish-name">${dish.dish_name}</div>
+            <div class="dish-details"><b>Available:</b> ${dish.time_start} – ${dish.time_end}</div>
+            <div class="dish-details">£${dish.price} – ${dish.portions} portions</div>
+            <div class="dish-details"><b>Allergy:</b> ${dish.allergy_info}</div>
+            <button class="btn-unavailable" data-id="${dish.id}">Unavailable Dishes</button>
+          `;
+          // Adds the dish to one of day column
+          col.appendChild(card);
+        });
+      });
+      // Waits for button unavailable to be clicked which then sends request to delete dish from system
+      document.querySelectorAll('.btn-unavailable').forEach(btn => {
+        btn.addEventListener('click', async function () {
+          const id = this.getAttribute('data-id');
+          const res = await fetch('delete_dish.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `id=${id}`
+          });
+          const text = await res.text();
+          // If dish was removed, remove it from dish card
+          if (text === 'Deleted') this.closest('.dish-card').remove();
+        });
+      });
+    }
+
+    window.onload = loadDishes;
+  </script>
+</body>
+</html>

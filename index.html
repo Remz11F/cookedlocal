@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CookedLocal</title>
+  <style>
+    /* Properties of website (Colours) */
+    :root {
+      --primary: #fe964f;
+      --primary-dark: #f35920;
+      --bg-light: #fff9f4;
+      --bg-accent: #fedab8;
+      --text-main: #333;
+      --footer-bg: #000000;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+    
+    header {
+      background-color: #fff;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    header img {
+      height: 50px;
+    }
+
+    .login-buttons a {
+      background-color: var(--primary);
+      color: #fff;
+      padding: 8px 16px;
+      font-size: 0.85em;
+      margin-left: 10px;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .login-buttons a:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .hero {
+      background: url('C:/xampp/htdocs/cookedlocal_verified/image.png') center/cover no-repeat;
+      padding: 100px 20px;
+      text-align: center;
+      color: var(--primary-dark);
+      font-size: 2.4em;
+      font-weight: bold;
+    }
+
+    .banner-image-container {
+      text-align: center;
+      margin: 50px auto;
+    }
+
+    .banner-image-container img {
+      width: 95%;
+      max-width: 1000px;
+      height: auto;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    section {
+      padding: 60px 20px;
+    }
+
+    h2 {
+      font-size: 2em;
+      text-align: center;
+      margin-bottom: 40px;
+      color: var(--primary-dark);
+    }
+
+    .meals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .meal-card {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .meal-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .step-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      background-color: var(--bg-accent);
+      padding: 60px 20px;
+    }
+
+    .step {
+      max-width: 250px;
+      text-align: center;
+    }
+
+    .step h3 {
+      margin-bottom: 10px;
+      color: var(--primary-dark);
+    }
+
+    .step p {
+      font-size: 0.95em;
+    }
+
+    .content {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: 0 auto 60px auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .certificate-info {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .certificate-info a {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #fe964f;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .certificate-info a:hover {
+      background-color: #f35920;
+    }
+
+    footer {
+      background-color: var(--footer-bg);
+      color: #fff;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    footer p {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="Logo.png" alt="HomeCooks Logo">
+    <div class="login-buttons">
+      <a href="login.html">Login</a>
+      <a href="buyer.html">Buyer Registration</a>
+      <a href="seller_reg.html">Cook Registration</a>
+      <a href="inquiry.html">Inquiries</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    Prepped Meals by Independent Cooks
+  </section>
+
+  <div class="banner-image-container">
+    <img src="pexels-chanwalrus-958545.jpg" alt="Banner Meal Image">
+  </div>
+
+  <section>
+    <h2>Display Meals</h2>
+    <div class="meals-grid">
+      <div class="meal-card">
+        <img src="pexels-marvin-ozz-1297854-2474661.jpg" alt="Indian Curry">
+        <p>Curry</p>
+      </div>
+      <div class="meal-card">
+        <img src="pexels-catscoming-955137.jpg" alt="Dumplings">
+        <p>Dumplings</p>
+      </div>
+      <div class="meal-card">
+        <img src="pexels-xmtnguyen-699953.jpg" alt="Shrimp Noodle Soup">
+        <p>Shrimp Noodles</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="certificate-info">
+      <p>
+        For Cooks to sell dishes, you must have a <strong>Level 2 Food Hygiene and Safety for Catering Certificate</strong>
+        If you are a Cook who doesn't have a certificate Please click the button below.
+      </p>
+      <a href="hygiene.html">Certificate Information</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 CookedLocal. All rights reserved.</p>
+  </footer>
+</body>
+</html>

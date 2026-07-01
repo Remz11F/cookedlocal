@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Buyer Dashboard</title>
+  <style>
+    /* Body of website */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #fff9f4, #ffe4d1);
+      color: #000;
+    }
+    /* Header of Website (how it will be) */
+    header {
+      background-color: #fffdf9;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    /* Format of Logo */
+    .logo img {
+      width: 150px;
+      height: auto;
+    }
+    /* Navigate links*/
+    nav a {
+      text-decoration: none;
+      color: #333;
+      margin-left: 20px;
+      font-size: 1em;
+    }
+    /* Dashboards style */
+    .dashboard {
+      display: flex;
+      min-height: calc(100vh - 100px);
+    }
+    /* The design of sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: #fedab8;
+      padding: 30px 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    }
+
+    .sidebar h3 {
+      font-size: 1.3em;
+      margin-bottom: 25px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      margin-bottom: 20px;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      padding: 12px 20px;
+      display: block;
+      background: #fff;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .sidebar a:hover {
+      background-color: #fe964f;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    /* Contents of page  */
+    .content {
+      flex: 1;
+      padding: 50px;
+      background-color: #fff;
+    }
+
+    .content h2 {
+      margin-bottom: 30px;
+      color: #f35920;
+    }
+
+    .info-box {
+      background-color: #fffdf9;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      max-width: 700px;
+    }
+
+    .info-box p {
+      margin: 15px 0;
+      font-size: 1.05em;
+    }
+
+    .info-box p strong {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+<!-- Header with logo -->
+<header>
+  <div class="logo">
+    <img src="Logo.png" alt="CookedLocal Logo" />
+  </div>
+  <nav>
+    <a href="index.html">Home</a>
+  </nav>
+</header>
+
+<div class="dashboard">
+  <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <h3>Buyer Functions</h3>
+    <ul>
+      <!-- Buttons with linked Pages -->
+      <li><a href="buyer_update.html">Update Details</a></li>
+      <li><a href="search.html">Search</a></li>
+      <li><a href="login.html">Logout</a></li>
+    </ul>
+  </div>
+  <!-- Displays buyer information -->
+  <div class="content">
+    <h2 id="welcome-heading">Welcome</h2>
+    <!-- buyer data is loaded -->
+    <div class="info-box" id="info-box">Loading</div>
+  </div>
+</div>
+
+<script>
+  fetch('get_buyer_info.php')
+    .then(res => res.json())
+    .then(buyer => {
+      if (buyer.error) {
+        // Error message if the fetching is unsucessful
+        document.getElementById("info-box").innerHTML = `<p>${buyer.error}</p>`;
+        return;
+      }
+      // Entry boxs with buyer details from buyer table
+      document.getElementById("welcome-heading").textContent = `Welcome, ${buyer.forname} ${buyer.surname}`;
+      document.getElementById("info-box").innerHTML = `
+        <img src="${buyer.profile_image || 'default-profile.png'}" alt="Profile Picture" style="width:150px;height:150px;border-radius:50%;object-fit:cover;margin-bottom:20px;">
+        <p><strong>Email:</strong> ${buyer.email}</p>
+        <p><strong>Phone:</strong> ${buyer.phone}</p>
+        <p><strong>Bio:</strong> ${buyer.bio}</p>
+        <p><strong>Hobbies:</strong> ${buyer.hobbies_interests}</p>
+        <p><strong>Food Preferences:</strong> ${buyer.food_preference}</p>
+        <p><strong>Payment Methods:</strong> ${buyer.payment_methods}</p>
+        <p><strong>City:</strong> ${buyer.city}</p>
+      `;
+    })
+    .catch(err => {
+      // Error Handeling
+      console.error("Unable to Load Buyer", err);
+      document.getElementById("info-box").innerHTML = "<p>Could not load buyer data. Please try again.</p>";
+    });
+
+  function logout(e) {
+    e.preventDefault();
+    sessionStorage.clear();
+    window.location.href = "login.html";
+  }
+</script>
+
+</body>
+</html>
